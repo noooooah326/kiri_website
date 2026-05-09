@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kiri-website",
+  "compatibility_date": "2026-05-09",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "kiri_website_upload"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
