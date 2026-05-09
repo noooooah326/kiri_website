@@ -488,6 +488,27 @@
         min-height: 100dvh;
       }
 
+      body::before {
+        background:
+          linear-gradient(
+            to bottom,
+            var(--bg) 0%,
+            rgba(247, 244, 239, 0.96) 8%,
+            rgba(247, 244, 239, 0) 23%,
+            rgba(247, 244, 239, 0) 76%,
+            rgba(247, 244, 239, 0.96) 92%,
+            var(--bg) 100%
+          ),
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.42), transparent 31%),
+          radial-gradient(circle at 76% 70%, rgba(200, 184, 166, 0.075), transparent 34%),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(200, 184, 166, 0.06)),
+          var(--bg);
+      }
+
+      body::after {
+        opacity: 0.08;
+      }
+
       .page {
         height: 100vh;
         height: 100svh;
