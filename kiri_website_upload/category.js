@@ -16,6 +16,7 @@ const meta = document.querySelector('#category-meta');
 const pageIndicator = document.querySelector('#page-indicator');
 const prevButton = document.querySelector('#prev-page');
 const nextButton = document.querySelector('#next-page');
+const pagination = document.querySelector('.pagination');
 const categoryLinks = document.querySelectorAll('[data-category-link]');
 
 function prefersReducedMotion() {
@@ -100,6 +101,14 @@ function setPagination(count) {
   nextButton.disabled = currentPage >= totalPages;
 }
 
+function setLoading(isLoading) {
+  grid.setAttribute('aria-busy', String(isLoading));
+  state.textContent = isLoading ? 'loading archive...' : '';
+  state.classList.toggle('is-visible', isLoading);
+  state.classList.toggle('is-loading', isLoading);
+  pagination.classList.toggle('is-hidden', isLoading);
+}
+
 function createImage(post) {
   const imageWrap = document.createElement('div');
   imageWrap.className = 'card-image';
@@ -179,6 +188,8 @@ function renderPosts(posts) {
 function renderEmpty() {
   grid.innerHTML = '';
   state.textContent = 'no public notes in this category yet.';
+  state.classList.remove('is-loading');
+  state.classList.add('is-visible');
 }
 
 function enterGrid() {
@@ -198,8 +209,7 @@ function enterGrid() {
 
 async function loadPosts(animate = false) {
   updateHeader();
-  state.textContent = 'loading archive...';
-  grid.setAttribute('aria-busy', 'true');
+  setLoading(true);
 
   const from = (currentPage - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -212,20 +222,24 @@ async function loadPosts(animate = false) {
     .order('post_no', { ascending: false })
     .range(from, to);
 
-  grid.setAttribute('aria-busy', 'false');
-
   if (error) {
     grid.innerHTML = '';
     grid.classList.remove('is-fading', 'is-entering');
+    grid.setAttribute('aria-busy', 'false');
     state.textContent = `archive could not be loaded: ${error.message}`;
+    state.classList.remove('is-loading');
+    state.classList.add('is-visible');
+    pagination.classList.remove('is-hidden');
     setPagination(0);
     return;
   }
 
   setPagination(count);
+  setLoading(false);
 
   if (!data || data.length === 0) {
     renderEmpty();
+    pagination.classList.remove('is-hidden');
     if (animate) {
       enterGrid();
     } else {
@@ -234,8 +248,8 @@ async function loadPosts(animate = false) {
     return;
   }
 
-  state.textContent = '';
   renderPosts(data);
+  pagination.classList.remove('is-hidden');
 
   if (animate) {
     enterGrid();

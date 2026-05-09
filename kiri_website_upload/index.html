@@ -94,8 +94,7 @@
       opacity: 0;
     }
 
-    .corner-label,
-    .status {
+    .corner-label {
       transform: translateY(6px);
       animation: fadeUp 900ms cubic-bezier(.2,.8,.2,1) forwards;
     }
@@ -253,7 +252,13 @@
       right: 4.6vw;
       bottom: 8.5vh;
       font-size: clamp(11px, 0.9vw, 14px);
-      animation-delay: 1020ms;
+      transform: translateY(6px);
+      transition: opacity 520ms cubic-bezier(.22,.61,.36,1), transform 520ms cubic-bezier(.22,.61,.36,1);
+    }
+
+    .status.is-ready {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .tail {
@@ -595,7 +600,7 @@
     <p class="microcopy">a quiet place for images and memories</p>
 
     <div class="enter">enter the archive</div>
-    <div class="status">last note</div>
+    <div class="status" data-last-note></div>
 
     <svg class="tail" viewBox="0 0 620 520" aria-hidden="true">
       <path d="M598 42 C532 92 530 178 452 224 C390 260 305 254 240 302 C175 350 164 444 92 498" />
@@ -618,12 +623,15 @@
     <p class="drawer-note">A quiet index for fragments, photos, notes, and daily traces.</p>
   </aside>
 
-  <script>
+  <script type="module">
+    import { supabase } from './supabase.js';
+
     const button = document.querySelector('.menu-button');
     const drawer = document.querySelector('.drawer');
     const scrim = document.querySelector('.scrim');
     const closeButton = document.querySelector('.drawer-close');
     const typeSlots = [...document.querySelectorAll('.type-slot')];
+    const lastNote = document.querySelector('[data-last-note]');
 
     function setDrawer(open) {
       button.classList.toggle('open', open);
@@ -668,7 +676,51 @@
       }
     }
 
+    function formatLastNoteDate(value) {
+      const date = new Date(value);
+
+      if (Number.isNaN(date.getTime())) {
+        return '';
+      }
+
+      return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric'
+      }).format(date);
+    }
+
+    function revealLastNote(text = 'last note') {
+      lastNote.textContent = text;
+      requestAnimationFrame(() => {
+        lastNote.classList.add('is-ready');
+      });
+    }
+
+    async function loadLastNoteDate() {
+      try {
+        const { data, error } = await supabase
+          .from('posts')
+          .select('created_at')
+          .eq('is_public', true)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (error || !data) {
+          revealLastNote();
+          return;
+        }
+
+        const displayDate = formatLastNoteDate(data.created_at);
+        revealLastNote(displayDate ? `last note / ${displayDate}` : 'last note');
+      } catch (error) {
+        revealLastNote();
+        return;
+      }
+    }
+
     typeWordmark();
+    loadLastNoteDate();
   </script>
 </body>
 </html>

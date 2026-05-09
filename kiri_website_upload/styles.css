@@ -320,9 +320,32 @@ html {
 }
 
 .archive-state {
-  min-height: 0;
+  position: absolute;
+  top: clamp(210px, 24vh, 270px);
+  left: 0;
+  right: 0;
+  min-height: 18px;
   margin-top: 0;
   text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 240ms cubic-bezier(.22,.61,.36,1), transform 240ms cubic-bezier(.22,.61,.36,1);
+}
+
+.archive-state.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.archive-state.is-loading {
+  position: fixed;
+  top: 50%;
+  z-index: 3;
+}
+
+.archive-state.is-loading.is-visible {
+  transform: translateY(-50%);
 }
 
 .pagination {
@@ -331,6 +354,15 @@ html {
   justify-content: center;
   gap: 28px;
   margin-top: 22px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 220ms cubic-bezier(.22,.61,.36,1), visibility 220ms cubic-bezier(.22,.61,.36,1);
+}
+
+.pagination.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .page-button {
@@ -415,6 +447,10 @@ html {
 
   .category-header {
     margin-bottom: 38px;
+  }
+
+  .archive-state {
+    top: clamp(250px, 34vh, 320px);
   }
 
   .category-nav {
