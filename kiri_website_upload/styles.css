@@ -38,7 +38,6 @@ html::after {
   position: fixed;
   left: 0;
   right: 0;
-  height: max(88px, var(--safe-area-top), var(--safe-area-bottom));
   pointer-events: none;
   background-color: var(--bg);
   z-index: 0;
@@ -46,10 +45,12 @@ html::after {
 
 html::before {
   top: 0;
+  height: var(--safe-area-top);
 }
 
 html::after {
   bottom: 0;
+  height: var(--safe-area-bottom);
 }
 
 .category-page::before {
