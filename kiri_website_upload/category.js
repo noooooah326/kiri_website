@@ -1,7 +1,7 @@
 import { supabase } from './supabase.js';
 
 const categories = ['kiri', 'fragments', 'games', 'places', 'others', 'archives'];
-const pageSize = 9;
+const pageSize = 3;
 const newWindowMs = 3 * 24 * 60 * 60 * 1000;
 
 let currentCategory = 'kiri';

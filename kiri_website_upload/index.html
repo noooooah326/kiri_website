@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Kiri — Private Archive</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,6 +17,10 @@
       --accent: #C8B8A6;
       --accent-soft: rgba(200, 184, 166, 0.42);
       --secondary-soft: rgba(119, 115, 108, 0.78);
+      --safe-area-top: env(safe-area-inset-top, 0px);
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-area-left: env(safe-area-inset-left, 0px);
+      --safe-area-right: env(safe-area-inset-right, 0px);
     }
 
     * {
@@ -137,18 +141,21 @@
     }
 
     .wordmark {
+      --wordmark-offset-x: clamp(5px, 0.52vw, 8px);
+      --wordmark-offset-y: 0px;
       color: #1F1F1F;
       font-size: clamp(70px, 7.4vw, 118px);
       font-weight: 400;
       letter-spacing: 0.105em;
       line-height: 0.88;
       opacity: 1;
+      transform: translate(var(--wordmark-offset-x), var(--wordmark-offset-y));
       text-rendering: geometricPrecision;
     }
 
     .typewriter {
       display: inline-grid;
-      grid-template-columns: repeat(5, 1ch);
+      grid-template-columns: repeat(4, 1ch) 0.38ch;
       column-gap: 0.105em;
       justify-content: center;
       letter-spacing: 0;
@@ -458,18 +465,31 @@
     }
 
     @media (max-width: 720px) {
+      html,
+      body {
+        min-height: -webkit-fill-available;
+      }
+
+      body {
+        min-height: 100svh;
+        min-height: 100dvh;
+      }
+
       .page {
-        min-height: 560px;
+        height: 100vh;
+        height: 100svh;
+        height: 100dvh;
+        min-height: 0;
       }
 
       .corner-label {
-        top: 34px;
-        left: 26px;
+        top: max(34px, calc(var(--safe-area-top) + 18px));
+        left: max(26px, calc(var(--safe-area-left) + 20px));
       }
 
       .menu-button {
-        top: 30px;
-        right: 26px;
+        top: max(30px, calc(var(--safe-area-top) + 16px));
+        right: max(26px, calc(var(--safe-area-right) + 20px));
         width: 31px;
       }
 
@@ -498,12 +518,12 @@
       }
 
       .enter {
-        bottom: 12vh;
+        bottom: max(12svh, calc(var(--safe-area-bottom) + 76px));
       }
 
       .status {
-        right: 26px;
-        bottom: 30px;
+        right: max(26px, calc(var(--safe-area-right) + 20px));
+        bottom: max(30px, calc(var(--safe-area-bottom) + 18px));
         font-size: 10px;
       }
 
@@ -517,13 +537,17 @@
       .drawer {
         height: 100dvh;
         justify-content: flex-start;
-        padding: clamp(94px, 15vh, 116px) 34px 48px;
+        padding:
+          max(clamp(94px, 15svh, 116px), calc(var(--safe-area-top) + 76px))
+          max(34px, calc(var(--safe-area-right) + 28px))
+          max(48px, calc(var(--safe-area-bottom) + 28px))
+          max(34px, calc(var(--safe-area-left) + 28px));
         gap: 32px;
       }
 
       .drawer-close {
-        top: 30px;
-        right: 26px;
+        top: max(30px, calc(var(--safe-area-top) + 16px));
+        right: max(26px, calc(var(--safe-area-right) + 20px));
       }
     }
 
