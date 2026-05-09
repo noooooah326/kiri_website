@@ -556,12 +556,12 @@
       }
 
       .enter::after {
-        height: max(118px, calc(var(--safe-area-bottom) + 118px));
+        height: 100dvh;
       }
 
       .status {
         right: max(26px, calc(var(--safe-area-right) + 20px));
-        bottom: max(30px, calc(var(--safe-area-bottom) + 18px));
+        bottom: var(--safe-area-bottom);
         width: 76px;
         font-size: 10px;
         line-height: 1.55;
