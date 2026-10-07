@@ -4,3 +4,10 @@
 !.dev.vars.example
 .env*
 !.env.example
+node_modules/
+dist/
+*.log
+.Rhistory
+design-qa/
+public/archive/
+kiri_website_upload/archive/

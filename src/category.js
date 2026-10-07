@@ -1,4 +1,4 @@
-import { supabase } from './supabase.js';
+import { supabase } from './lib/supabase';
 
 const categories = ['kiri', 'fragments', 'games', 'places', 'others', 'archives'];
 const pageSize = 3;
@@ -214,19 +214,20 @@ async function loadPosts(animate = false) {
   const from = (currentPage - 1) * pageSize;
   const to = from + pageSize - 1;
 
-  const { data, error, count } = await supabase
+  const { data, error, count } = supabase ? await supabase
     .from('posts')
-    .select('*', { count: 'exact' })
+    .select('id,title,slug,category,content,image_url,created_at,is_public,post_no', { count: 'exact' })
     .eq('is_public', true)
     .eq('category', currentCategory)
     .order('post_no', { ascending: false })
-    .range(from, to);
+    .order('id', { ascending: false })
+    .range(from, to) : { data: null, error: new Error('Connection unavailable.'), count: 0 };
 
   if (error) {
     grid.innerHTML = '';
     grid.classList.remove('is-fading', 'is-entering');
     grid.setAttribute('aria-busy', 'false');
-    state.textContent = `archive could not be loaded: ${error.message}`;
+    state.textContent = 'Archive could not be loaded. Please refresh to try again.';
     state.classList.remove('is-loading');
     state.classList.add('is-visible');
     pagination.classList.remove('is-hidden');
